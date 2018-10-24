@@ -19,4 +19,4 @@ def checkLicensePlate(stateInitials, licensePlate):
 	browser.find_element_by_id('state').click()
 	browser.find_element_by_xpath("//*[contains(text(), '%s')]" % stateInitials).click()
 	browser.find_element_by_id('plateSearch').click()
-checkLicensePlate("CA","6JVC693")
+checkLicensePlate("CA","6JVC694")
