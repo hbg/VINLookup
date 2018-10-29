@@ -8,6 +8,7 @@ import time
 import os
 from datetime import datetime
 from selenium import webdriver
+from Setup.tester import tester
 from selenium.webdriver.chrome.options import Options
 import pymongo
 from pymongo import MongoClient
@@ -25,7 +26,6 @@ signalparameters = {
 	"host": declared.data["host"],
 	"port": declared.data["port"],
 	"namespace": declared.data["namespace"],
-
 }
 
 conn = MongoClient(
@@ -55,7 +55,7 @@ def checkLicensePlate(stateInitials, licensePlate):
 	carYear = 0
 	for mk in CarSetup.makesList:
 		if (mk.upper() in carName):
-			carName = carName.replace(mk, "")
+			carName = carName.replace(mk.upper(), "")
 			carMake = mk
 	for i in range(1885, int(datetime.now().year) + 1):
 		if str(i) in carName:
