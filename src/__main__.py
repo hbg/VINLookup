@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.options import Options
 import pymongo
 from pymongo import MongoClient
 import selenium
-
+import cv2
 
 
 jsonConfigPATH = "C:\\Python27\\VINLookup.json"
@@ -27,6 +27,7 @@ signalparameters = {
 	"port": declared.data["port"],
 	"namespace": declared.data["namespace"],
 }
+autoURL = 'https://www.autocheck.com/vehiclehistory/autocheck/en/search-by-license-plate'
 
 conn = MongoClient(
     'mongodb://{user}:{password}@{host}:'
@@ -37,20 +38,25 @@ db = conn.licenseplates
 browser = webdriver.Chrome(declared.chromedriver,   chrome_options=declared.chrome_options)
 
 
+def findByID(ID):
+	return browser.find_element_by_id(ID)
+
 def checkLicensePlate(stateInitials, licensePlate):
-	browser.get('https://www.autocheck.com/vehiclehistory/autocheck/en/search-by-license-plate')
-	browser.find_element_by_id('plateNumber').send_keys(licensePlate)
-	browser.find_element_by_id('state').click()
+	browser.get(autoURL)
+	findByID('plateNumber').send_keys(licensePlate)
+	findByID('state').click()
 	browser.find_element_by_xpath("//*[contains(text(), '%s')]" % stateInitials).click()
-	browser.find_element_by_id('plateSearch').click()
+	findByID('plateSearch').click()
 	time.sleep(1.0)
-	element = browser.find_element_by_id('test_vinSummary_carSpecification_$4')
+	element = findByID('test_vinSummary_carSpecification_$4')
 	summary = element.get_attribute('innerHTML')
 	#print(summary)
 	carName = summary.split('<h2>')[1].split('</h2>')[0].replace('&nbsp;',' ').upper()
-	"""
-	CROSS CHECK FOR COMPANY NAME & YEAR IN CAR NAME
-	"""
+									"""
+
+									CROSS CHECK FOR COMPANY NAME & YEAR IN CAR NAME
+
+									"""
 	carMake = ""
 	carYear = 0
 	for mk in CarSetup.makesList:
